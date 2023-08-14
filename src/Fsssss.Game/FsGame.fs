@@ -1,5 +1,4 @@
-﻿namespace Fsssss
-
+﻿namespace Fsssss.Game
 open System
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
