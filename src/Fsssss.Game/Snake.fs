@@ -1,5 +1,4 @@
-﻿namespace Fsssss
-
+﻿namespace Fsssss.Game
 open System
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
@@ -148,30 +147,11 @@ module Snake =
 
     /// Draw one part of the snake. We do one part at a time because
     /// there is a fade effect along the length of the snake.
-    let drawPart 
-        (spritebatch:SpriteBatch) 
-        (texture:Texture2D) 
-        alpha
-        (p:Rectangle) =
-                
-        spritebatch.Draw(
-            texture,
-            p,
-            Nullable(new Rectangle(0, 0, partWidth, partHeight)),
-            Color.Magenta * alpha
-        )
+    let drawPart (spritebatch : SpriteBatch) (texture : Texture2D) alpha (p : Rectangle) =
+        spritebatch.Draw(texture, p, Nullable(new Rectangle(0, 0, partWidth, partHeight)), Color.Magenta * alpha)
 
     /// Draws the whole snake to the spritebatch - takes care of the fade-effect.
-    let draw    
-        (spritebatch:SpriteBatch) 
-        (texture:Texture2D)
-        (Snakey (direction, body, eating)) = 
-                
-        List.iteri(fun i part ->
-            let alpha = 
-                MathHelper.Clamp(
-                    1.0f - float32 i * 0.05f,
-                    0.05f, 1.0f
-                )
-            drawPart spritebatch texture alpha part
-        ) body
+    let draw spriteBatch texture2D (Snakey (direction, body, eating)) =
+        let alpha i = MathHelper.Clamp(1.0f - float32 i * 0.05f, 0.05f, 1.0f)
+        let drawPart' i = drawPart spriteBatch texture2D (alpha i)
+        body |> List.iteri (drawPart')

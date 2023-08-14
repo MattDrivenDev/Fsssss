@@ -1,8 +1,7 @@
-﻿namespace Fsssss
-
-open Microsoft.Xna.Framework
+﻿namespace Fsssss.Game
 open Microsoft.Xna.Framework.Graphics
 open Microsoft.Xna.Framework.Input
+open Microsoft.Xna.Framework
 
 type FsssssGame() as this = 
     inherit FsGame(
@@ -34,16 +33,17 @@ type FsssssGame() as this =
         else None
     
     let loadTextures _ =
-        texture <- this.Content.Load<Microsoft.Xna.Framework.Graphics.Texture2D>("particles")
+        texture <- new Texture2D(this.GraphicsDevice, 8, 8, false, SurfaceFormat.Color)
+        texture.SetData [| for i in 0 .. 63 -> Color.Magenta |]
 
     let whiteBackground _ _ = 
-        this.Graphics.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.White)
+        this.Graphics.GraphicsDevice.Clear(Color.White)
 
-    let beginSpritebatch spritebatch _ = 
-        (spritebatch:Microsoft.Xna.Framework.Graphics.SpriteBatch).Begin()
+    let beginSpritebatch (spritebatch : SpriteBatch) _ = 
+        spritebatch.Begin()
 
-    let endSpritebatch spritebatch _ = 
-        (spritebatch:Microsoft.Xna.Framework.Graphics.SpriteBatch).End()
+    let endSpritebatch (spritebatch : SpriteBatch) _ = 
+        spritebatch.End()
 
     /// Function to track the state of the apple, and drops a new on
     /// in the garden somewhere if there isn't one available.
@@ -51,7 +51,7 @@ type FsssssGame() as this =
         let position = Garden.randomPosition this.Random
         match apple with
         | Some a -> ()
-        | None -> apple <- Some (Apples.drop position.X position.Y)
+        | None -> apple <- Some (Apple.drop position.X position.Y)
 
     /// Function to track the game time and move the snake if we are allowed.
     let moveSnakey gametime =
@@ -91,14 +91,14 @@ type FsssssGame() as this =
             movetime <- 0.0         
 
     let drawWall spritebatch _ =
-        Garden.drawWall spritebatch texture
+        Garden.draw spritebatch texture
 
     let drawSnakey spritebatch _ =
         Snake.draw spritebatch texture snakey
 
     let drawApple spritebatch _ =   
         match apple with
-        | Some a -> Apples.draw spritebatch texture a
+        | Some a -> Apple.draw spritebatch texture a
         | None -> ()
 
     override this.InitializeSteps = []

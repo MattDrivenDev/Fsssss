@@ -1,11 +1,9 @@
-﻿namespace Fsssss
-
+﻿namespace Fsssss.Game
 open System
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 
-/// The game world is represented as a Garden, it has a wall around it.
-module Garden =
+module Garden = 
 
     /// Creates a brick at a set of coordinates.
     let layBrick x y = new Rectangle(x, y, 8, 8)
@@ -18,8 +16,7 @@ module Garden =
 
     /// Gets a random position from the garden game-board.
     let randomPosition (random:Random) = 
-        garden.[(random.Next(3, 61))].[(random.Next(3, 61))]
-            
+        garden.[(random.Next(3, 61))].[(random.Next(3, 61))]            
 
     let topWall = [for i in 0..64 -> layBrick (i * 8) 0]
     let bottomWall = [for i in 0..64 -> layBrick (i * 8) (64 * 8)]
@@ -29,16 +26,12 @@ module Garden =
     /// Gets the representation of the 4 walls around the edge of the garden.
     let wall = topWall @ bottomWall @ leftWall @ rightWall
 
-    /// Draws all of the garden wall.
-    let drawWall
-        (spritebatch:SpriteBatch) 
-        (texture:Texture2D) =
+    /// Draws a brick on the screen to an existing SpriteBatch.
+    let drawBrick (spriteBatch : SpriteBatch) (gardenTexture : Texture2D) (brick : Rectangle) = 
+        spriteBatch.Draw(gardenTexture, brick, Color.White)
 
-        List.iter(fun (brick:Rectangle) ->
-            spritebatch.Draw(
-                texture,
-                brick,
-                System.Nullable(new Rectangle(0, 0, 8, 8)),
-                Color.Black
-            )
-        ) wall
+    /// Draws the garden on the screen to an existing SpriteBatch.
+    let draw spriteBatch gardenTexture =
+        wall |> List.iter (drawBrick spriteBatch gardenTexture)
+
+    
